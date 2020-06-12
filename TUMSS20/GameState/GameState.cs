@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
 {
@@ -19,6 +20,7 @@ namespace TUMSS20.GameState
         private int screenHeight;
         private int points;
         private GameCharacter character;
+        private PointLightManager pointLightManager;
         private Camera camera;
         private int playedMs;
 
@@ -38,6 +40,8 @@ namespace TUMSS20.GameState
             character = new GameCharacter(screenHeight, contentManager);
             defaultFont = contentManager.Load<SpriteFont>("DefaultFont");
             wall = contentManager.Load<Texture2D>("wall");
+
+            pointLightManager = new PointLightManager(contentManager);
 
             camera = new Camera(graphics.GraphicsDevice);
             RestartQTE();
@@ -96,10 +100,10 @@ namespace TUMSS20.GameState
 
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
+            pointLightManager.Draw(spriteBatch);
+
             // Draw player followed by camera
-            spriteBatch.Begin();
             character.Draw(time, spriteBatch);
-            spriteBatch.End();
 
             bool handleQTE = (qte != null && isInQTE);
      

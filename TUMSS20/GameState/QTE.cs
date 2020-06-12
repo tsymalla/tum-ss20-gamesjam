@@ -52,7 +52,7 @@ namespace TUMSS20.GameState
         {
             Random rnd = new Random();
 
-            for (int i = 0; i < rnd.Next(2, 3); i++)
+            for (int i = 0; i < rnd.Next(2, 4); i++)
             {
                 int currentKey = rnd.Next((int)Keys.A, (int)Keys.Z);
                 relevantKeys.Add((Keys)currentKey);
@@ -70,12 +70,23 @@ namespace TUMSS20.GameState
 
         public void HandleInput(GameTime time)
         {
+            if (elapsedMs < 100)
+            {
+                return;
+            }
+
             KeyboardState keyboardState = Keyboard.GetState();
 
             List<Keys> currentPressedKeys = new List<Keys>(keyboardState.GetPressedKeys());
 
             foreach (Keys pressedKey in currentPressedKeys)
             {
+                int keyCode = (int)pressedKey;
+                if (keyCode < (int)Keys.A && keyCode > (int)Keys.Z)
+                {
+                    continue;
+                }
+
                 if (keyboardState.IsKeyDown(pressedKey) && oldState.IsKeyUp(pressedKey))
                 {
                     pressedKeys.Add(pressedKey);
@@ -87,6 +98,12 @@ namespace TUMSS20.GameState
 
         private void ValidateKeys()
         {
+            if (relevantKeys.Count != pressedKeys.Count)
+            {
+                failed = true;
+                return;
+            }
+
             for (int i = 0; i < pressedKeys.Count; i++)
             {
                 if (i >= relevantKeys.Count)

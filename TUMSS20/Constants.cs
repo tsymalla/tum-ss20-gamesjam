@@ -9,7 +9,7 @@ namespace TUMSS20
 {
     public class Constants
     {
-        private static Color ColorFromHex(string hex)
+        public static Color ColorFromHex(string hex)
         {
             var drawColor = System.Drawing.ColorTranslator.FromHtml(hex);
             return new Color(drawColor.R, drawColor.G, drawColor.B);

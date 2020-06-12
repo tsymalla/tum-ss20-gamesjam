@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
 {
@@ -10,7 +11,9 @@ namespace TUMSS20.GameState
         private Vector2 position;
         private float velocity;
         private Texture2D texture;
+        private Texture2D particleTexture;
         private const float gravity = 2.0f;
+        private ParticleEmitter particleEmitter;
 
         public Vector2 Position
         {
@@ -33,6 +36,8 @@ namespace TUMSS20.GameState
             velocity = 1.0f;
             position = new Vector2(0, screenHeight / 2);
             texture = contentManager.Load<Texture2D>("character");
+            particleTexture = contentManager.Load<Texture2D>("pointlight");
+            particleEmitter = new ParticleEmitter(particleTexture, position);
         }
 
         public void Update(GameTime gameTime, int points)
@@ -46,11 +51,17 @@ namespace TUMSS20.GameState
 
             // make the character go down automatically
             position.Y += gravity;
+            particleEmitter.EmitterLocation = position;
+            particleEmitter.Update();
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            particleEmitter.Draw(spriteBatch);
+
+            spriteBatch.Begin();
             spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.End();
         }
 
         public void Impulse()
