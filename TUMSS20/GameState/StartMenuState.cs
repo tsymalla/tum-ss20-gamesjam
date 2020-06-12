@@ -14,10 +14,11 @@ namespace TUMSS20.GameState
     public class StartMenuState : BaseGameState
     {
         private SpriteFont defaultFont;
+        private Texture2D titleScreen;
 
         public override void Init(GraphicsDeviceManager graphics, ContentManager contentManager)
         {
-            defaultFont = contentManager.Load<SpriteFont>("DefaultFont");
+            titleScreen = contentManager.Load<Texture2D>("title");
         }
 
         public override void HandleInput(GameTime time)
@@ -33,19 +34,11 @@ namespace TUMSS20.GameState
         public override void Update(GameTime time)
         {
         }
+
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
-            var halfScreenWidth = graphics.PreferredBackBufferWidth / 2;
-            var halfScreenHeight = graphics.PreferredBackBufferHeight / 2;
-            var center = new Vector2(halfScreenWidth, halfScreenHeight);
-            const string titleString = "ColorCave";
-            var textSize = defaultFont.MeasureString(titleString);
-
-            center.X -= textSize.X;
-            center.Y -= textSize.Y;
-
             spriteBatch.Begin();
-            spriteBatch.DrawString(defaultFont, "ColorCave", center, Color.White);
+            spriteBatch.Draw(titleScreen, new Vector2(0, 0), Color.White);
             spriteBatch.End();
         }
     }

@@ -37,12 +37,12 @@ namespace TUMSS20.GameState
 
         public void Update(GameTime gameTime, int points)
         {
-           position.X += (float)Math.Sin(velocity);
-
             if (points > 0)
             {
-                velocity = 1.0f / ((float)gameTime.ElapsedGameTime.Milliseconds / (float)points);
+                velocity += (float)Math.Sin((float)points / 1000.0f);
             }
+
+            position.X += velocity;
 
             // make the character go down automatically
             position.Y += gravity;

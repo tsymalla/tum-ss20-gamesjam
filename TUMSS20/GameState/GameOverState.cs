@@ -26,23 +26,6 @@ namespace TUMSS20.GameState
             }
         }
 
-        public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
-        {
-            spriteBatch.Begin();
-            spriteBatch.DrawString(defaultFont, "Game over!", new Vector2(50, 50), Color.White);
-            spriteBatch.DrawString(defaultFont, string.Format("You scored {0} points! Try better next time.", totalPoints), new Vector2(50, 80), Color.White);
-            spriteBatch.DrawString(defaultFont, "Press Space to replay.", new Vector2(50, 110), Color.White);
-            spriteBatch.End();
-        }
-
-        public override void HandleInput(GameTime time)
-        {
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && IsDelayPassed)
-            {
-                gameStateManager.Restart();
-            }
-        }
-
         public override void Init(GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             defaultFont = contentManager.Load<SpriteFont>("DefaultFont");
@@ -53,9 +36,26 @@ namespace TUMSS20.GameState
             totalPoints = points;
         }
 
+        public override void HandleInput(GameTime time)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && IsDelayPassed)
+            {
+                gameStateManager.Restart();
+            }
+        }
+
         public override void Update(GameTime time)
         {
             totalMsSpent += (int)time.ElapsedGameTime.TotalMilliseconds;
+        }
+
+        public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
+        {
+            spriteBatch.Begin();
+            spriteBatch.DrawString(defaultFont, "Game over!", new Vector2(50, 50), Constants.GAME_FOREGROUND_COLOR);
+            spriteBatch.DrawString(defaultFont, string.Format("You scored {0} points!", totalPoints), new Vector2(50, 80), Constants.GAME_FOREGROUND_COLOR);
+            spriteBatch.DrawString(defaultFont, "Press Space to replay.", new Vector2(50, 110), Constants.GAME_FOREGROUND_COLOR);
+            spriteBatch.End();
         }
     }
 }

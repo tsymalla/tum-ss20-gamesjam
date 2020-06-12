@@ -22,10 +22,16 @@ namespace TUMSS20.GameState
         private Camera camera;
         private int playedMs;
 
+        private bool isInQTE;
+        private int timeElapsedSinceQTE;
+        private int nextQTESecondsDelay;
+        private QTE qte;
+
         public override void Init(GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             points = 0;
             playedMs = 0;
+            timeElapsedSinceQTE = 0;
             screenWidth = graphics.PreferredBackBufferWidth;
             screenHeight = graphics.PreferredBackBufferHeight;
 
@@ -34,6 +40,32 @@ namespace TUMSS20.GameState
             wall = contentManager.Load<Texture2D>("wall");
 
             camera = new Camera(graphics.GraphicsDevice);
+            RestartQTE();
+        }
+
+        private void RestartQTE()
+        {
+            timeElapsedSinceQTE = 0;
+            isInQTE = false;
+            qte = null;
+
+            var rnd = new Random();
+            nextQTESecondsDelay = rnd.Next(3, 5);
+        }
+
+        private void CheckQTE()
+        {
+            // check seconds elapsed
+            if ((timeElapsedSinceQTE / 1000) >= nextQTESecondsDelay)
+            {
+                ExecuteQTE();
+            }
+        }
+
+        private void ExecuteQTE()
+        {
+            isInQTE = true;
+            qte = new QTE();
         }
 
         private void DrawWall(SpriteBatch spriteBatch, bool mirrored)
@@ -52,23 +84,59 @@ namespace TUMSS20.GameState
             }
         }
 
+        private void DrawPoints(SpriteBatch spriteBatch)
+        {
+            string pointString = string.Format("Points: {0}", points);
+            var size = defaultFont.MeasureString(pointString);
+
+            var posX = screenWidth - size.X;
+            var posY = screenHeight - wall.Height - size.Y;
+            spriteBatch.DrawString(defaultFont, string.Format("Points: {0}", points), new Vector2(posX, posY), Constants.GAME_FOREGROUND_COLOR);
+        }
+
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
-            // Draw points
-            spriteBatch.Begin();
-            spriteBatch.DrawString(defaultFont, string.Format("Points: {0}", points), new Vector2(10, 10), Color.White);
-            DrawWall(spriteBatch, false);
-            DrawWall(spriteBatch, true);
-            spriteBatch.End();
-
             // Draw player followed by camera
             spriteBatch.Begin();
             character.Draw(time, spriteBatch);
             spriteBatch.End();
+
+            bool handleQTE = (qte != null && isInQTE);
+     
+            if (handleQTE && qte.Invert)
+            {
+                BlendState blendInvert = new BlendState()
+                {
+                    ColorSourceBlend = Blend.Zero,
+                    ColorDestinationBlend = Blend.InverseSourceColor,
+                };
+                spriteBatch.Begin(SpriteSortMode.Deferred, blendInvert);
+            }
+            else
+            {
+                spriteBatch.Begin();
+            }
+
+            DrawWall(spriteBatch, false);
+            DrawWall(spriteBatch, true);
+            DrawPoints(spriteBatch);
+            spriteBatch.End();
+
+            if (handleQTE)
+            {
+                qte.Draw(spriteBatch, defaultFont);
+                return;
+            }
         }
 
         public override void HandleInput(GameTime time)
         {
+            if (isInQTE)
+            {
+                qte.HandleInput(time);
+                return;
+            }
+
             var keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Space))
@@ -79,6 +147,24 @@ namespace TUMSS20.GameState
 
         public override void Update(GameTime time)
         {
+            if (isInQTE)
+            {
+                if (qte.Failed)
+                {
+                    GameOver();
+                }
+                else if (qte.Passed)
+                {
+                    RestartQTE();
+                }
+                else
+                {
+                    qte.Update(time);
+                }
+
+                return;
+            }
+
             camera.Update(time);
             camera.Position = character.Position;
 
@@ -86,6 +172,10 @@ namespace TUMSS20.GameState
             if (playedMs > 0)
             {
                 points = playedMs / 10000;
+
+                // update qte timer
+                timeElapsedSinceQTE += time.ElapsedGameTime.Milliseconds;
+                CheckQTE();
             }
 
             character.Update(time, points);
@@ -103,6 +193,11 @@ namespace TUMSS20.GameState
                 return;
             }
 
+            GameOver();
+        }
+
+        private void GameOver()
+        {
             var gameOver = new GameOverState();
             gameOver.SetTotalPoints(points);
             gameStateManager.PushState(gameOver);

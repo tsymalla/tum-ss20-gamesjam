@@ -88,7 +88,7 @@ namespace TUMSS20
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Constants.GAME_BACKGROUND_COLOR);
 
             gameStateManager.Draw(gameTime);
 
