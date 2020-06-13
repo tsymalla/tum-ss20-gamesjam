@@ -56,8 +56,6 @@ namespace TUMSS20.GameState
             bottomWall = new Wall(contentManager, screenWidth, screenHeight, true);
 
             camera = new Camera(graphics.GraphicsDevice);
-            camera.LoadContent();
-            camera.Debug.IsVisible = true;
 
             currentElement = Constants.ChoseElement(false, currentElement);
             currentColor = Constants.ELEMENT_COLORS[currentElement];
@@ -93,12 +91,12 @@ namespace TUMSS20.GameState
         private void DrawScore(SpriteBatch spriteBatch)
         {
             string scoreString = string.Format("Score: {0}", score);
-            spriteBatch.DrawString(defaultFont, scoreString, new Vector2(30, (Constants.ELEMENT_IMAGE_SIZE * Constants.ELEMENT_IMAGE_SCALE) + 35), Color.White);
+            spriteBatch.DrawString(defaultFont, scoreString, new Vector2(35, (Constants.ELEMENT_IMAGE_SIZE * Constants.ELEMENT_IMAGE_SCALE) + 35), Color.White);
         }
 
         private void DrawElement(SpriteBatch spriteBatch)
         {
-            elementSheet.Draw((int)currentElement, new Vector2(30, 30), Constants.ELEMENT_IMAGE_SCALE, spriteBatch);
+            elementSheet.Draw((int)currentElement, new Vector2(20, 30), Constants.ELEMENT_IMAGE_SCALE, spriteBatch);
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -140,7 +138,6 @@ namespace TUMSS20.GameState
             DrawScore(spriteBatch);
             DrawElement(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Draw(camera.Debug);
         }
 
         public override void HandleInput(GameTime time)
