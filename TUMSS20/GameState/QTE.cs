@@ -68,7 +68,7 @@ namespace TUMSS20.GameState
         private void SetInvertColors()
         {
             Random rnd = new Random();
-            Invert = (rnd.Next(0, 1) == 1);
+            Invert = (rnd.NextDouble() >= 0.5);
         }
 
         public void HandleInput(GameTime time)

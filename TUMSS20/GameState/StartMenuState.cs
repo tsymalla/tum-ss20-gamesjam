@@ -38,7 +38,7 @@ namespace TUMSS20.GameState
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(titleScreen, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(titleScreen, new Vector2(0, 0), Color.Red);
             spriteBatch.End();
         }
     }

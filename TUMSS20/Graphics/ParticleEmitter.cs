@@ -36,7 +36,7 @@ namespace TUMSS20.Graphics
             int ttl = 10 + random.Next(45);
 
             double lerpFactor = random.NextDouble();
-            Color color = Color.Lerp(Constants.GAME_BACKGROUND_COLOR, Constants.GAME_FOREGROUND_COLOR, (float)lerpFactor);
+            Color color = Color.Lerp(Color.Red, Color.Blue, (float)lerpFactor);
 
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }
@@ -61,12 +61,12 @@ namespace TUMSS20.Graphics
             }
         }
 
-        public void Draw(Camera camera, SpriteBatch spriteBatch)
+        public void Draw(Camera camera, SpriteBatch spriteBatch, Color color)
         {
             spriteBatch.Begin(camera);
             for (int index = 0; index < particles.Count; index++)
             {
-                particles[index].Draw(spriteBatch);
+                particles[index].Draw(spriteBatch, color);
             }
             spriteBatch.End();
         }

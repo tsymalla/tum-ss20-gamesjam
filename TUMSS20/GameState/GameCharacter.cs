@@ -59,12 +59,12 @@ namespace TUMSS20.GameState
             particleEmitter.Update();
         }
 
-        public void Draw(Camera camera, GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(Camera camera, GameTime gameTime, SpriteBatch spriteBatch, Color color)
         {
-            particleEmitter.Draw(camera, spriteBatch);
+            particleEmitter.Draw(camera, spriteBatch, color);
 
             spriteBatch.Begin(camera);
-            spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.Draw(texture, position, color);
             spriteBatch.End();
         }
 

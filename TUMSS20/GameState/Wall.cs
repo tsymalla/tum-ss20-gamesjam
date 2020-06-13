@@ -66,7 +66,7 @@ namespace TUMSS20.GameState
             //heights.RemoveRange(0, (int)playerPosition.X / 2 / wall.Width);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Color color)
         {
             int wallWidth = wall.Width;
             for (int x = 0; x < heights.Count; x++)
@@ -77,7 +77,7 @@ namespace TUMSS20.GameState
                 int endY = inverted ? startY + tileCountY : tileCountY;
                 for (int y = startY; y < endY; y++)
                 {
-                    spriteBatch.Draw(wall, new Vector2(x * wallWidth, y * wall.Height), Color.White);
+                    spriteBatch.Draw(wall, new Vector2(x * wallWidth, y * wall.Height), color);
                 }
             }
         }

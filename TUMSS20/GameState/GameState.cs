@@ -18,12 +18,14 @@ namespace TUMSS20.GameState
         private int screenWidth;
         private int screenHeight;
         private int score;
+        private Texture2D background;
         private GameCharacter character;
         private PointLightManager pointLightManager;
         private Camera camera;
         private int playedMs;
         private Wall topWall;
         private Wall bottomWall;
+        private Color currentColor = Color.Blue;
 
         private bool isInQTE;
         private int timeElapsedSinceQTE;
@@ -40,6 +42,7 @@ namespace TUMSS20.GameState
 
             character = new GameCharacter(screenHeight, contentManager);
             defaultFont = contentManager.Load<SpriteFont>("DefaultFont");
+            background = contentManager.Load<Texture2D>("background");
 
             pointLightManager = new PointLightManager(contentManager);
 
@@ -76,6 +79,14 @@ namespace TUMSS20.GameState
         {
             isInQTE = true;
             qte = new QTE();
+            if (qte.Invert)
+            {
+                currentColor = Color.Red;
+            }
+            else
+            {
+                currentColor = Color.Blue;
+            }
         }
 
         private void DrawScore(SpriteBatch spriteBatch)
@@ -88,31 +99,41 @@ namespace TUMSS20.GameState
             spriteBatch.DrawString(defaultFont, scoreString, new Vector2(posX, posY), Color.White);
         }
 
+        private void DrawBackground(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+            for (int i = 0; i < screenWidth / background.Width + 1; i++)
+            {
+                for (int j = 0; j < screenHeight / background.Height + 1; j++)
+                {
+                    spriteBatch.Draw(background, new Vector2(i * background.Width, j * background.Height), currentColor);
+                }
+            }
+
+            spriteBatch.End();
+        }
+
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
+            DrawBackground(spriteBatch);
             pointLightManager.Draw(spriteBatch);
 
             // Draw player followed by camera
-            character.Draw(camera, time, spriteBatch);
+            character.Draw(camera, time, spriteBatch, currentColor);
 
             bool handleQTE = (qte != null && isInQTE);
      
             if (handleQTE && qte.Invert)
             {
-                BlendState blendInvert = new BlendState()
-                {
-                    ColorSourceBlend = Blend.Zero,
-                    ColorDestinationBlend = Blend.InverseSourceColor,
-                };
-                spriteBatch.Begin(SpriteSortMode.Deferred, blendInvert);
+                spriteBatch.Begin();
             }
             else
             {
                 spriteBatch.Begin(camera);
             }
 
-            topWall.Draw(spriteBatch);
-            bottomWall.Draw(spriteBatch);
+            topWall.Draw(spriteBatch, currentColor);
+            bottomWall.Draw(spriteBatch, currentColor);
             spriteBatch.End();
 
             spriteBatch.Begin();
@@ -198,6 +219,7 @@ namespace TUMSS20.GameState
         {
             var gameOver = new GameOverState();
             gameOver.SetTotalScore(score);
+            gameOver.SetColor(currentColor);
             gameStateManager.PushState(gameOver);
         }
     }
