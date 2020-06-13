@@ -111,23 +111,21 @@ namespace TUMSS20.GameState
 
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
+            bool handleQTE = (qte != null && isInQTE);
+
+            if (handleQTE)
+            {
+                qte.Draw(graphics, spriteBatch, defaultFont);
+                return;
+            }
+
             DrawBackground(spriteBatch);
             pointLightManager.Draw(spriteBatch);
 
             // Draw player followed by camera
             character.Draw(camera, time, spriteBatch, currentColor);
 
-            bool handleQTE = (qte != null && isInQTE);
-     
-            if (handleQTE)
-            {
-                spriteBatch.Begin();
-            }
-            else
-            {
-                spriteBatch.Begin(camera);
-            }
-
+            spriteBatch.Begin(camera);
             topWall.Draw(spriteBatch, currentColor);
             bottomWall.Draw(spriteBatch, currentColor);
             spriteBatch.End();
@@ -136,12 +134,6 @@ namespace TUMSS20.GameState
             DrawScore(spriteBatch);
             spriteBatch.End();
             spriteBatch.Draw(camera.Debug);
-
-            if (handleQTE)
-            {
-                qte.Draw(graphics, spriteBatch, defaultFont);
-                return;
-            }
         }
 
         public override void HandleInput(GameTime time)

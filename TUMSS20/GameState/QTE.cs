@@ -131,7 +131,8 @@ namespace TUMSS20.GameState
             spriteBatch.Begin();
             Text.DrawCenteredString(graphics, spriteBatch, font, 0.0f, "MODIFY YOUR ELEMENT NOW!", Color.White);
             Text.DrawCenteredString(graphics, spriteBatch, font, elementLabelY, string.Format("Current element: {0}", Constants.ELEMENT_NAMES[selectedElement]), Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, font, 45.0f, string.Format("Applicable elements: {0}", elementString), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 45.0f, string.Format("New element: {0}", Constants.ELEMENT_NAMES[ChosenElement]), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 65.0f, string.Format("Applicable elements: {0}", elementString), Color.White);
             spriteBatch.End();
         }
     }
