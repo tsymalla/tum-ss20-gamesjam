@@ -20,7 +20,7 @@ namespace TUMSS20.GameState
         private KeyboardState oldState;
         private float elementLabelY;
         private SpriteSheet elementSheet;
-        private int timeLeftSeconds = 0;
+        private int timeLeftMs;
 
         public int TimeoutSeconds
         {
@@ -103,7 +103,7 @@ namespace TUMSS20.GameState
                 TimeoutSeconds = 1;
             }
 
-            timeLeftSeconds = TimeoutSeconds;
+            timeLeftMs = TimeoutSeconds * 1000;
         }
 
         public void HandleInput(GameTime time)
@@ -146,30 +146,40 @@ namespace TUMSS20.GameState
                 Validate();
             }
 
-            elementLabelY = 25.0f + (float)Math.Sin((float)elapsedMs / 100.0f) * 2.0f;
+            timeLeftMs -= time.ElapsedGameTime.Milliseconds;
+            timeLeftMs = Math.Max(timeLeftMs, 1);
+
+            elementLabelY = 155.0f + (float)Math.Sin((float)elapsedMs / 100.0f) * 2.0f;
         }
 
         public void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.Begin();
-            Text.DrawCenteredString(graphics, spriteBatch, font, 0.0f, "MODIFY YOUR ELEMENT!", Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, font, elementLabelY, string.Format("Current element: {0}", Constants.ELEMENT_NAMES[selectedElement]), Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, font, 45.0f, string.Format("New element: {0}", Constants.ELEMENT_NAMES[ChosenElement]), Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, font, 65.0f, string.Format("Applicable elements: {0}", elementString), Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, font, 85.0f, string.Format("Seconds left: {0}", timeLeftSeconds), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 0.0f, "Modify your element!", Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 85.0f, string.Format("I chose: {0}", Constants.ELEMENT_NAMES[ChosenElement]), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 125.0f, string.Format("Beat me with: {0}", elementString), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, elementLabelY, string.Format("Your choice: {0}", Constants.ELEMENT_NAMES[selectedElement]), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 210.0f, string.Format("Seconds left: {0}", (timeLeftMs / 1000)), Color.White);
 
             int elementScale = Constants.ELEMENT_IMAGE_SCALE;
             var relevantElements = Constants.ELEMENT_MAPPING[ChosenElement];
-            int totalWidth = relevantElements.Count * Constants.ELEMENT_IMAGE_SIZE * elementScale;
+            int elementSize = Constants.ELEMENT_IMAGE_SIZE * elementScale;
+            int totalWidth = relevantElements.Count * elementSize;
             int center = (graphics.PreferredBackBufferWidth / 2) - (totalWidth / 2);
+
+            int chosenX = center - elementSize;
+            float elementY = 55.0f;
+            elementSheet.Draw((int)ChosenElement, new Vector2(chosenX, elementY), elementScale, spriteBatch);
 
             int i = 0;
             foreach (var applicableElement in relevantElements)
             {
                 var index = (int)applicableElement;
-                elementSheet.Draw(index, new Vector2(center + (i * Constants.ELEMENT_IMAGE_SIZE * elementScale), 130), elementScale, spriteBatch);
+                elementSheet.Draw(index, new Vector2(center + ((i + 1) * elementSize), elementY), elementScale, spriteBatch);
                 i++;
             }
+
+            spriteBatch.DrawString(font, "vs", new Vector2(chosenX + (elementSize * 1.3f), elementY + ((float)elementSize / 2.0f)), Color.White);
 
             spriteBatch.End();
         }

@@ -15,8 +15,18 @@ namespace TUMSS20.GameState
     public class StartMenuState : BaseGameState
     {
         private Texture2D titleScreen;
+        const int TIME_DELAY_SECONDS = 1;
+        private int totalMsSpent = 0;
         private Texture2D elementTexture;
         private SpriteSheet elementSpriteSheet;
+
+        private bool IsDelayPassed
+        {
+            get
+            {
+                return (totalMsSpent / 1000) >= TIME_DELAY_SECONDS;
+            }
+        }
 
         public override void Init(GraphicsDeviceManager graphics, ContentManager contentManager)
         {
@@ -29,7 +39,7 @@ namespace TUMSS20.GameState
         {
             var keyboardState = Keyboard.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.Enter))
+            if (keyboardState.IsKeyDown(Keys.Space) && IsDelayPassed)
             {
                 gameStateManager.PushState(new GameState());
             }
@@ -37,6 +47,7 @@ namespace TUMSS20.GameState
 
         public override void Update(GameTime time)
         {
+            totalMsSpent += (int)time.ElapsedGameTime.TotalMilliseconds;
         }
 
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
