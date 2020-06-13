@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TUMSS20.Graphics;
 
@@ -17,6 +18,12 @@ namespace TUMSS20.GameState
         private string elementString;
         private KeyboardState oldState;
         private float elementLabelY;
+
+        public int TimeoutSeconds
+        {
+            get;
+            set;
+        }
 
         public bool Failed
         {
@@ -36,12 +43,13 @@ namespace TUMSS20.GameState
             set;
         }
 
-        public QTE(Constants.ELEMENT selectedElement)
+        public QTE(Constants.ELEMENT selectedElement, int currentScore)
         {
             elapsedMs = 0;
             Failed = false;
             elementLabelY = 25.0f;
             ChoseElement();
+            ChoseTimeout(currentScore);
             this.selectedElement = selectedElement;
         }
         
@@ -53,6 +61,26 @@ namespace TUMSS20.GameState
             var validElementNames = from element in validElements select Constants.ELEMENT_NAMES[element];
 
             elementString = string.Join(", ", validElementNames);
+        }
+
+        private void ChoseTimeout(int currentScore)
+        {
+            if (currentScore < 10)
+            {
+                TimeoutSeconds = 5;
+            }
+            else if (currentScore >= 10 && currentScore < 20)
+            {
+                TimeoutSeconds = 4;
+            }
+            else if (currentScore >= 20 && currentScore < 30)
+            {
+                TimeoutSeconds = 3;
+            }
+            else
+            {
+                TimeoutSeconds = 2;
+            }
         }
 
         public void HandleInput(GameTime time)
@@ -90,7 +118,7 @@ namespace TUMSS20.GameState
         {
             elapsedMs += time.ElapsedGameTime.Milliseconds;
 
-            if (elapsedMs >= 2000)
+            if ((elapsedMs / 1000) >= TimeoutSeconds)
             {
                 Validate();
             }
@@ -103,7 +131,7 @@ namespace TUMSS20.GameState
             spriteBatch.Begin();
             Text.DrawCenteredString(graphics, spriteBatch, font, 0.0f, "MODIFY YOUR ELEMENT NOW!", Color.White);
             Text.DrawCenteredString(graphics, spriteBatch, font, elementLabelY, string.Format("Current element: {0}", Constants.ELEMENT_NAMES[selectedElement]), Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, font, 40, string.Format("Applicable elements: {0}", elementString), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 45.0f, string.Format("Applicable elements: {0}", elementString), Color.White);
             spriteBatch.End();
         }
     }

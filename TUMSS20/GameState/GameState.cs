@@ -82,7 +82,7 @@ namespace TUMSS20.GameState
         private void ExecuteQTE()
         {
             isInQTE = true;
-            qte = new QTE(currentElement);
+            qte = new QTE(currentElement, score);
         }
 
         private void DrawScore(SpriteBatch spriteBatch)
