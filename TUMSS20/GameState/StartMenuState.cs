@@ -42,7 +42,7 @@ namespace TUMSS20.GameState
 
             if (keyboardState.IsKeyDown(Keys.Space) && IsDelayPassed)
             {
-                AudioCache.Instance.Play("pick");
+                AudioCache.Instance.PlaySoundEffect("pick");
                 gameStateManager.PushState(new GameState());
             }
         }
@@ -71,6 +71,7 @@ namespace TUMSS20.GameState
 
         public override void SetActive()
         {
+            AudioCache.Instance.PlaySong("battle-theme", true);
         }
     }
 }

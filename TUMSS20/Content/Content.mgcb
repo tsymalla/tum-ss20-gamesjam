@@ -13,17 +13,29 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin audio/pick.mp3
+#begin audio/battle-theme.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:audio/pick.mp3
+/build:audio/battle-theme.mp3
 
-#begin audio/success.mp3
+#begin audio/cave-theme.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:audio/success.mp3
+/build:audio/cave-theme.mp3
+
+#begin audio/pick.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/pick.wav
+
+#begin audio/success.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/success.wav
 
 #begin background.png
 /importer:TextureImporter

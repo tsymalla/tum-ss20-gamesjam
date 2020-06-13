@@ -63,6 +63,7 @@ namespace TUMSS20.GameState
             ChoseElement();
             ChoseTimeout(currentScore);
             this.selectedElement = selectedElement;
+            AudioCache.Instance.PlaySong("battle-theme");
         }
         
         private void ChoseElement()
@@ -118,7 +119,7 @@ namespace TUMSS20.GameState
 
             if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
             {
-                AudioCache.Instance.Play("pick");
+                AudioCache.Instance.PlaySoundEffect("pick");
 
                 int currentIndex = (int)selectedElement;
                 ++currentIndex;

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUMSS20.Audio;
 using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
@@ -82,6 +83,7 @@ namespace TUMSS20.GameState
 
             var rnd = new Random();
             nextQTESecondsDelay = rnd.Next(5, 7);
+            SetActive();
         }
 
         private void CheckQTE()
@@ -248,6 +250,8 @@ namespace TUMSS20.GameState
 
         public override void SetActive()
         {
+            AudioCache.Instance.StopSongs();
+            AudioCache.Instance.PlaySong("cave-theme", true);
         }
     }
 }

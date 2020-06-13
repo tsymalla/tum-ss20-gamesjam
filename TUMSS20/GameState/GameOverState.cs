@@ -49,7 +49,7 @@ namespace TUMSS20.GameState
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && IsDelayPassed)
             {
-                AudioCache.Instance.Play("pick");
+                AudioCache.Instance.PlaySoundEffect("pick");
 
                 Constants.TotalScore = 0;
                 Constants.CurrentLevel = 1;
@@ -77,6 +77,7 @@ namespace TUMSS20.GameState
 
         public override void SetActive()
         {
+            AudioCache.Instance.StopSongs();
         }
     }
 }

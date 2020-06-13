@@ -38,11 +38,13 @@ namespace TUMSS20.Audio
 
         private ContentManager contentManager;
         private Dictionary<string, Song> tracks;
+        private Dictionary<string, SoundEffect> effects;
 
         public void Init(ContentManager contentManager)
         {
             this.contentManager = contentManager;
             tracks = new Dictionary<string, Song>();
+            effects = new Dictionary<string, SoundEffect>();
         }
 
         public void Shutdown()
@@ -55,7 +57,7 @@ namespace TUMSS20.Audio
             tracks.Clear();
         }
 
-        private Song getSoundEffect(string assetName)
+        private Song getSong(string assetName)
         {
             string fullPath = string.Format("audio/{0}", assetName);
 
@@ -66,11 +68,39 @@ namespace TUMSS20.Audio
 
             return tracks[fullPath];
         }
-
-        public void Play(string assetName)
+        private SoundEffect getSoundEffect(string assetName)
         {
-            Song track = getSoundEffect(assetName);
+            string fullPath = string.Format("audio/{0}", assetName);
+
+            if (!effects.ContainsKey(fullPath))
+            {
+                effects.Add(fullPath, contentManager.Load<SoundEffect>(fullPath));
+            }
+
+            return effects[fullPath];
+        }
+
+        public void PlaySong(string assetName, bool repeating)
+        {
+            Song track = getSong(assetName);
+            MediaPlayer.IsRepeating = repeating;
             MediaPlayer.Play(track);
+        }
+
+        public void StopSongs()
+        {
+            MediaPlayer.Stop();
+        }
+
+        public void PlaySong(string assetName)
+        {
+            PlaySong(assetName, false);
+        }
+
+        public void PlaySoundEffect(string assetName)
+        {
+            SoundEffect effect = getSoundEffect(assetName);
+            effect.Play();
         }
     }
 }
