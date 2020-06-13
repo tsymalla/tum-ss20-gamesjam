@@ -17,6 +17,7 @@ namespace TUMSS20.GameState
         private Texture2D wall;
         private List<int> heights;
         private int totalScreens;
+        private const int BIAS = 4;
 
         public Wall(ContentManager contentManager, int screenWidth, int screenHeight, bool inverted, int totalScreens)
         {
@@ -41,7 +42,7 @@ namespace TUMSS20.GameState
         
             for (int index = 0; index < maxCount; index++)
             {
-                int maxHeight = rnd.Next(2, 5);
+                int maxHeight = Math.Max(rnd.Next(1, Constants.CurrentLevel * 2), 4);
                 heights.Add(rnd.Next(1, maxHeight));
             }
         }
@@ -73,7 +74,7 @@ namespace TUMSS20.GameState
             int height = heights[tileIndex] * wall.Height;
 
             int posY = (int)position.Y;
-            if (posY > height && posY + collidableHeight < screenHeight - height)
+            if (posY > height - BIAS && posY + collidableHeight < screenHeight - height + BIAS)
             {
                 return false;
             }

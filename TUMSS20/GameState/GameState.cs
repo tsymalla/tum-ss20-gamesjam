@@ -18,6 +18,7 @@ namespace TUMSS20.GameState
         private int screenWidth;
         private int screenHeight;
         private int score;
+        private int startTimerMs;
         private Texture2D background;
         private GameCharacter character;
         private PointLightManager pointLightManager;
@@ -36,11 +37,20 @@ namespace TUMSS20.GameState
         private int nextQTESecondsDelay;
         private QTE qte;
 
+        private bool StartTimerPassed
+        {
+            get
+            {
+                return (startTimerMs / 1000) > 1;
+            }
+        }
+
         public override void Init(GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             score = 0;
             playedMs = 0;
             timeElapsedSinceQTE = 0;
+            startTimerMs = 0;
             screenWidth = graphics.PreferredBackBufferWidth;
             screenHeight = graphics.PreferredBackBufferHeight;
 
@@ -161,6 +171,15 @@ namespace TUMSS20.GameState
 
         public override void Update(GameTime time)
         {
+            camera.Update(time);
+            camera.Position = character.Position;
+
+            startTimerMs += time.ElapsedGameTime.Milliseconds;
+            if (!StartTimerPassed)
+            {
+                return;
+            }
+
             if (isInQTE)
             {
                 if (qte.Failed)
@@ -180,9 +199,6 @@ namespace TUMSS20.GameState
 
                 return;
             }
-
-            camera.Update(time);
-            camera.Position = character.Position;
 
             playedMs += time.TotalGameTime.Milliseconds;
             if (playedMs > 0)
@@ -217,6 +233,7 @@ namespace TUMSS20.GameState
         private void GameOver()
         {
             var gameOver = new GameOverState();
+            gameOver.SetTotalScore(score);
             gameOver.SetColor(currentColor);
             gameStateManager.PushState(gameOver);
         }

@@ -34,6 +34,11 @@ namespace TUMSS20.GameState
             scoreLabelY = 80;
         }
 
+        public void SetTotalScore(int points)
+        {
+            Constants.TotalScore += points;
+        }
+
         public void SetColor(Color color)
         {
             this.color = color;
