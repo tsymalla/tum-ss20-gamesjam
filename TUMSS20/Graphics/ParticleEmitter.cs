@@ -35,10 +35,7 @@ namespace TUMSS20.Graphics
             float size = (float)random.NextDouble();
             int ttl = 10 + random.Next(45);
 
-            double lerpFactor = random.NextDouble();
-            Color color = Color.Lerp(Color.Red, Color.Blue, (float)lerpFactor);
-
-            return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
+            return new Particle(texture, position, velocity, angle, angularVelocity, size, ttl);
         }
 
         public void Update()

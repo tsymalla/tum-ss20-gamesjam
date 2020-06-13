@@ -25,7 +25,8 @@ namespace TUMSS20.GameState
         private int playedMs;
         private Wall topWall;
         private Wall bottomWall;
-        private Color currentColor = Color.Blue;
+        private Constants.ELEMENT currentElement;
+        private Color currentColor;
 
         private bool isInQTE;
         private int timeElapsedSinceQTE;
@@ -53,6 +54,9 @@ namespace TUMSS20.GameState
             camera.LoadContent();
             camera.Debug.IsVisible = true;
 
+            currentElement = Constants.ChoseElement(false, currentElement);
+            currentColor = Constants.ELEMENT_COLORS[currentElement];
+
             RestartQTE();
         }
 
@@ -78,15 +82,7 @@ namespace TUMSS20.GameState
         private void ExecuteQTE()
         {
             isInQTE = true;
-            qte = new QTE();
-            if (qte.Invert)
-            {
-                currentColor = Color.Red;
-            }
-            else
-            {
-                currentColor = Color.Blue;
-            }
+            qte = new QTE(currentElement);
         }
 
         private void DrawScore(SpriteBatch spriteBatch)
@@ -123,7 +119,7 @@ namespace TUMSS20.GameState
 
             bool handleQTE = (qte != null && isInQTE);
      
-            if (handleQTE && qte.Invert)
+            if (handleQTE)
             {
                 spriteBatch.Begin();
             }
@@ -174,6 +170,8 @@ namespace TUMSS20.GameState
                 }
                 else if (qte.Passed)
                 {
+                    currentElement = qte.ChosenElement;
+                    currentColor = Constants.ELEMENT_COLORS[currentElement];
                     RestartQTE();
                 }
                 else
