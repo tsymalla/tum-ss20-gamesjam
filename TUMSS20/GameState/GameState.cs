@@ -245,5 +245,9 @@ namespace TUMSS20.GameState
             finishLevel.SetColor(currentColor);
             gameStateManager.PushState(finishLevel);
         }
+
+        public override void SetActive()
+        {
+        }
     }
 }

@@ -50,6 +50,7 @@ namespace TUMSS20.GameState
             stateStack.Push(state);
             CurrentState.Init(graphics, contentManager);
             CurrentState.InjectStateManager(this);
+            CurrentState.SetActive();
         }
 
         public void PopState()

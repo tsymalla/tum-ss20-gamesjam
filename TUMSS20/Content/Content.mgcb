@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin audio/pick.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audio/pick.mp3
+
+#begin audio/success.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audio/success.mp3
+
 #begin background.png
 /importer:TextureImporter
 /processor:TextureProcessor

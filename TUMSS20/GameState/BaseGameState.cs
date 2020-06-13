@@ -20,6 +20,8 @@ namespace TUMSS20.GameState
 
         public abstract void Init(GraphicsDeviceManager graphics, ContentManager contentManager);
 
+        public abstract void SetActive();
+
         public abstract void HandleInput(GameTime time);
 
         public abstract void Update(GameTime time);

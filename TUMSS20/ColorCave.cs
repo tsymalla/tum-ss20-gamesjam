@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq.Expressions;
+using TUMSS20.Audio;
 using TUMSS20.GameState;
 
 namespace TUMSS20
@@ -48,6 +49,7 @@ namespace TUMSS20
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameStateManager = new GameStateManager(Content, graphics, spriteBatch);
+            AudioCache.Instance.Init(Content);
 
             gameStateManager.PushState(new StartMenuState());
         }

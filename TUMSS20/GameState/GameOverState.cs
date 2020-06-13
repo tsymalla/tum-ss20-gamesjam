@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using TUMSS20.Audio;
 using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
@@ -48,6 +49,8 @@ namespace TUMSS20.GameState
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && IsDelayPassed)
             {
+                AudioCache.Instance.Play("pick");
+
                 Constants.TotalScore = 0;
                 Constants.CurrentLevel = 1;
 
@@ -70,6 +73,10 @@ namespace TUMSS20.GameState
             Text.DrawCenteredString(graphics, spriteBatch, defaultFont, scoreLabelY, string.Format("You scored {0} points!", Constants.TotalScore), Color.White);
             Text.DrawCenteredString(graphics, spriteBatch, defaultFont, 100, "Press Space to replay.", Color.White);
             spriteBatch.End();
+        }
+
+        public override void SetActive()
+        {
         }
     }
 }

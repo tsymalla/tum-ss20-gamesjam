@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using TUMSS20.Audio;
 using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
@@ -41,6 +42,7 @@ namespace TUMSS20.GameState
 
             if (keyboardState.IsKeyDown(Keys.Space) && IsDelayPassed)
             {
+                AudioCache.Instance.Play("pick");
                 gameStateManager.PushState(new GameState());
             }
         }
@@ -65,6 +67,10 @@ namespace TUMSS20.GameState
             }
 
             spriteBatch.End();
+        }
+
+        public override void SetActive()
+        {
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TUMSS20.Audio;
 using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
@@ -117,6 +118,8 @@ namespace TUMSS20.GameState
 
             if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
             {
+                AudioCache.Instance.Play("pick");
+
                 int currentIndex = (int)selectedElement;
                 ++currentIndex;
                 if (currentIndex >= Constants.ELEMENT_COUNT)
