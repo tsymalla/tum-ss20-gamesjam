@@ -8,15 +8,17 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
 {
     public class GameOverState : BaseGameState
     {
         private SpriteFont defaultFont;
-        private int totalPoints = 0;
-        const int TIME_DELAY_SECONDS = 3;
+        private int totalScore = 0;
+        const int TIME_DELAY_SECONDS = 1;
         private int totalMsSpent = 0;
+        private float scoreLabelY;
 
         private bool IsDelayPassed
         {
@@ -29,11 +31,12 @@ namespace TUMSS20.GameState
         public override void Init(GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             defaultFont = contentManager.Load<SpriteFont>("DefaultFont");
+            scoreLabelY = 80;
         }
 
-        public void SetTotalPoints(int points)
+        public void SetTotalScore(int points)
         {
-            totalPoints = points;
+            totalScore = points;
         }
 
         public override void HandleInput(GameTime time)
@@ -47,14 +50,15 @@ namespace TUMSS20.GameState
         public override void Update(GameTime time)
         {
             totalMsSpent += (int)time.ElapsedGameTime.TotalMilliseconds;
+            scoreLabelY = 45.0f + (float)Math.Sin((float)totalMsSpent / 100.0f) * 5.0f;
         }
 
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(defaultFont, "Game over!", new Vector2(50, 50), Constants.GAME_FOREGROUND_COLOR);
-            spriteBatch.DrawString(defaultFont, string.Format("You scored {0} points!", totalPoints), new Vector2(50, 80), Constants.GAME_FOREGROUND_COLOR);
-            spriteBatch.DrawString(defaultFont, "Press Space to replay.", new Vector2(50, 110), Constants.GAME_FOREGROUND_COLOR);
+            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, 0, "GAME OVER!", Constants.GAME_FOREGROUND_COLOR);
+            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, scoreLabelY, string.Format("You scored {0} points!", totalScore), Constants.GAME_FOREGROUND_COLOR);
+            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, 100, "Press Space to replay.", Constants.GAME_FOREGROUND_COLOR);
             spriteBatch.End();
         }
     }

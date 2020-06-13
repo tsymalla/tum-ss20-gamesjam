@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
 {
@@ -17,12 +18,13 @@ namespace TUMSS20.GameState
         private string keyString;
         private bool failed;
         private KeyboardState oldState;
+        private float keyLabelY;
 
         public bool Failed
         {
             get
             {
-                return failed;
+                return false;// failed;
             }
         }
 
@@ -44,6 +46,7 @@ namespace TUMSS20.GameState
             failed = false;
             relevantKeys = new List<Keys>();
             pressedKeys = new List<Keys>();
+            keyLabelY = 25.0f;
             GenerateKeys();
             SetInvertColors();
         }
@@ -98,7 +101,7 @@ namespace TUMSS20.GameState
 
         private void ValidateKeys()
         {
-            if (relevantKeys.Count != pressedKeys.Count)
+           /* if (relevantKeys.Count != pressedKeys.Count)
             {
                 failed = true;
                 return;
@@ -117,7 +120,7 @@ namespace TUMSS20.GameState
                     failed = true;
                     return;
                 }
-            }
+            }*/
 
             Passed = true;
         }
@@ -130,13 +133,15 @@ namespace TUMSS20.GameState
             {
                 ValidateKeys();
             }
+
+            keyLabelY = 25.0f + (float)Math.Sin((float)elapsedMs / 100.0f) * 5.0f;
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
+        public void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "Modify your color now!", new Vector2(20, 20), Constants.GAME_FOREGROUND_COLOR);
-            spriteBatch.DrawString(font, string.Format("Press {0}", keyString), new Vector2(20, 40), Constants.GAME_FOREGROUND_COLOR);
+            Text.DrawCenteredString(graphics, spriteBatch, font, 0.0f, "MODIFY YOUR COLOR NOW!", Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, font, keyLabelY, string.Format("Press {0}", keyString), Color.White);
             spriteBatch.End();
         }
     }

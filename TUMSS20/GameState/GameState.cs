@@ -15,14 +15,15 @@ namespace TUMSS20.GameState
     public class GameState : BaseGameState
     {
         private SpriteFont defaultFont;
-        private Texture2D wall;
         private int screenWidth;
         private int screenHeight;
-        private int points;
+        private int score;
         private GameCharacter character;
         private PointLightManager pointLightManager;
         private Camera camera;
         private int playedMs;
+        private Wall topWall;
+        private Wall bottomWall;
 
         private bool isInQTE;
         private int timeElapsedSinceQTE;
@@ -31,7 +32,7 @@ namespace TUMSS20.GameState
 
         public override void Init(GraphicsDeviceManager graphics, ContentManager contentManager)
         {
-            points = 0;
+            score = 0;
             playedMs = 0;
             timeElapsedSinceQTE = 0;
             screenWidth = graphics.PreferredBackBufferWidth;
@@ -39,11 +40,16 @@ namespace TUMSS20.GameState
 
             character = new GameCharacter(screenHeight, contentManager);
             defaultFont = contentManager.Load<SpriteFont>("DefaultFont");
-            wall = contentManager.Load<Texture2D>("wall");
 
             pointLightManager = new PointLightManager(contentManager);
 
+            topWall = new Wall(contentManager, screenWidth, screenHeight, false);
+            bottomWall = new Wall(contentManager, screenWidth, screenHeight, true);
+
             camera = new Camera(graphics.GraphicsDevice);
+            camera.LoadContent();
+            camera.Debug.IsVisible = true;
+
             RestartQTE();
         }
 
@@ -72,30 +78,14 @@ namespace TUMSS20.GameState
             qte = new QTE();
         }
 
-        private void DrawWall(SpriteBatch spriteBatch, bool mirrored)
+        private void DrawScore(SpriteBatch spriteBatch)
         {
-            int yStart = 0;
-
-            if (mirrored)
-            {
-                yStart = screenHeight - wall.Height;
-            }
-
-            int wallWidth = wall.Width;
-            for (int x = 0; x < screenWidth / wallWidth; x++)
-            {
-                spriteBatch.Draw(wall, new Vector2(x * wallWidth, yStart), Color.White);
-            }
-        }
-
-        private void DrawPoints(SpriteBatch spriteBatch)
-        {
-            string pointString = string.Format("Points: {0}", points);
-            var size = defaultFont.MeasureString(pointString);
+            string scoreString = string.Format("Score: {0}", score);
+            var size = defaultFont.MeasureString(scoreString);
 
             var posX = screenWidth - size.X;
-            var posY = screenHeight - wall.Height - size.Y;
-            spriteBatch.DrawString(defaultFont, string.Format("Points: {0}", points), new Vector2(posX, posY), Constants.GAME_FOREGROUND_COLOR);
+            var posY = screenHeight - size.Y;
+            spriteBatch.DrawString(defaultFont, scoreString, new Vector2(posX, posY), Color.White);
         }
 
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
@@ -103,7 +93,7 @@ namespace TUMSS20.GameState
             pointLightManager.Draw(spriteBatch);
 
             // Draw player followed by camera
-            character.Draw(time, spriteBatch);
+            character.Draw(camera, time, spriteBatch);
 
             bool handleQTE = (qte != null && isInQTE);
      
@@ -118,17 +108,21 @@ namespace TUMSS20.GameState
             }
             else
             {
-                spriteBatch.Begin();
+                spriteBatch.Begin(camera);
             }
 
-            DrawWall(spriteBatch, false);
-            DrawWall(spriteBatch, true);
-            DrawPoints(spriteBatch);
+            topWall.Draw(spriteBatch);
+            bottomWall.Draw(spriteBatch);
             spriteBatch.End();
+
+            spriteBatch.Begin();
+            DrawScore(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Draw(camera.Debug);
 
             if (handleQTE)
             {
-                qte.Draw(spriteBatch, defaultFont);
+                qte.Draw(graphics, spriteBatch, defaultFont);
                 return;
             }
         }
@@ -169,30 +163,30 @@ namespace TUMSS20.GameState
                 return;
             }
 
+            topWall.Update(character.Position, character.Width, time, score);
+            bottomWall.Update(character.Position, character.Width, time, score);
+
             camera.Update(time);
             camera.Position = character.Position;
 
             playedMs += time.TotalGameTime.Milliseconds;
             if (playedMs > 0)
             {
-                points = playedMs / 10000;
+                score = playedMs / 10000;
 
                 // update qte timer
                 timeElapsedSinceQTE += time.ElapsedGameTime.Milliseconds;
                 CheckQTE();
             }
 
-            character.Update(time, points);
+            character.Update(time, score);
             CheckGameLost();
         }
 
         private void CheckGameLost()
         {
             // check boundaries
-            var posY = character.Position.Y;
-            var wallHeight = wall.Height;
-
-            if (posY > wallHeight && posY + character.Height < screenHeight - wallHeight)
+            if (!topWall.HasCollided(character.Position, character.Height) && !bottomWall.HasCollided(character.Position, character.Height))
             {
                 return;
             }
@@ -203,7 +197,7 @@ namespace TUMSS20.GameState
         private void GameOver()
         {
             var gameOver = new GameOverState();
-            gameOver.SetTotalPoints(points);
+            gameOver.SetTotalScore(score);
             gameStateManager.PushState(gameOver);
         }
     }

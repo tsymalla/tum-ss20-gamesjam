@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Comora;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -60,9 +61,9 @@ namespace TUMSS20.Graphics
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(Camera camera, SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(camera);
             for (int index = 0; index < particles.Count; index++)
             {
                 particles[index].Draw(spriteBatch);

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Comora;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -31,6 +32,14 @@ namespace TUMSS20.GameState
             }
         }
 
+        public int Width
+        {
+            get
+            {
+                return texture.Height;
+            }
+        }
+
         public GameCharacter(int screenHeight, ContentManager contentManager)
         {
             velocity = 1.0f;
@@ -42,11 +51,6 @@ namespace TUMSS20.GameState
 
         public void Update(GameTime gameTime, int points)
         {
-            if (points > 0)
-            {
-                velocity += (float)Math.Sin((float)points / 1000.0f);
-            }
-
             position.X += velocity;
 
             // make the character go down automatically
@@ -55,11 +59,11 @@ namespace TUMSS20.GameState
             particleEmitter.Update();
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(Camera camera, GameTime gameTime, SpriteBatch spriteBatch)
         {
-            particleEmitter.Draw(spriteBatch);
+            particleEmitter.Draw(camera, spriteBatch);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(camera);
             spriteBatch.Draw(texture, position, Color.White);
             spriteBatch.End();
         }

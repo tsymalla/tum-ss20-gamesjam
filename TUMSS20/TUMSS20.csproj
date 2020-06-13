@@ -51,6 +51,8 @@
     <Compile Include="GameState\StartMenuState.cs" />
     <Compile Include="GameState\BaseGameState.cs" />
     <Compile Include="GameState\GameStateManager.cs" />
+    <Compile Include="GameState\Wall.cs" />
+    <Compile Include="Graphics\Text.cs" />
     <Compile Include="Graphics\Particle.cs" />
     <Compile Include="Graphics\ParticleEmitter.cs" />
     <Compile Include="Graphics\PointLight.cs" />
