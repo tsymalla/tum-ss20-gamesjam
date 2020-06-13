@@ -42,7 +42,7 @@ namespace TUMSS20.GameState
         
             for (int index = 0; index < maxCount; index++)
             {
-                int maxHeight = Math.Max(rnd.Next(1, Constants.CurrentLevel * 2), 4);
+                int maxHeight = Math.Min(rnd.Next(1, Constants.CurrentLevel), 5);
                 heights.Add(rnd.Next(1, maxHeight));
             }
         }
