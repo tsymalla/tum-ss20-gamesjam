@@ -26,6 +26,9 @@ namespace TUMSS20.GameState
         private Wall topWall;
         private Wall bottomWall;
         private Constants.ELEMENT currentElement;
+        private Texture2D elementTexture;
+        private SpriteSheet elementSheet;
+
         private Color currentColor;
 
         private bool isInQTE;
@@ -44,6 +47,8 @@ namespace TUMSS20.GameState
             character = new GameCharacter(screenHeight, contentManager);
             defaultFont = contentManager.Load<SpriteFont>("DefaultFont");
             background = contentManager.Load<Texture2D>("background");
+            elementTexture = contentManager.Load<Texture2D>("elements");
+            elementSheet = new SpriteSheet(elementTexture, Constants.ELEMENT_IMAGE_SIZE);
 
             pointLightManager = new PointLightManager(contentManager);
 
@@ -82,17 +87,18 @@ namespace TUMSS20.GameState
         private void ExecuteQTE()
         {
             isInQTE = true;
-            qte = new QTE(currentElement, score);
+            qte = new QTE(currentElement, score, elementSheet);
         }
 
         private void DrawScore(SpriteBatch spriteBatch)
         {
             string scoreString = string.Format("Score: {0}", score);
-            var size = defaultFont.MeasureString(scoreString);
+            spriteBatch.DrawString(defaultFont, scoreString, new Vector2(30, (Constants.ELEMENT_IMAGE_SIZE * Constants.ELEMENT_IMAGE_SCALE) + 35), Color.White);
+        }
 
-            var posX = screenWidth - size.X;
-            var posY = screenHeight - size.Y;
-            spriteBatch.DrawString(defaultFont, scoreString, new Vector2(posX, posY), Color.White);
+        private void DrawElement(SpriteBatch spriteBatch)
+        {
+            elementSheet.Draw((int)currentElement, new Vector2(30, 30), Constants.ELEMENT_IMAGE_SCALE, spriteBatch);
         }
 
         private void DrawBackground(SpriteBatch spriteBatch)
@@ -132,6 +138,7 @@ namespace TUMSS20.GameState
 
             spriteBatch.Begin();
             DrawScore(spriteBatch);
+            DrawElement(spriteBatch);
             spriteBatch.End();
             spriteBatch.Draw(camera.Debug);
         }

@@ -23,37 +23,39 @@ namespace TUMSS20
         {
             FIRE = 0,
             ICE = 1,
-            WOOD = 2,
+            LEAF = 2,
             STONE = 3,
             WIND = 4
         }
 
         public static int ELEMENT_COUNT = 5;
+        public static int ELEMENT_IMAGE_SIZE = 32;
+        public static int ELEMENT_IMAGE_SCALE = 3;
 
         public static Dictionary<ELEMENT, string> ELEMENT_NAMES = new Dictionary<ELEMENT, string>
         {
             { ELEMENT.FIRE, "Fire" },
             { ELEMENT.ICE, "Ice" },
-            { ELEMENT.WOOD, "Wood" },
+            { ELEMENT.LEAF, "Leaf" },
             { ELEMENT.STONE, "Stone" },
             { ELEMENT.WIND, "Wind" }
         };
-
+        
         // mapping table: which element needs to be chosen to go on
         public static Dictionary<ELEMENT, List<ELEMENT>> ELEMENT_MAPPING = new Dictionary<ELEMENT, List<ELEMENT>>
         {
             { ELEMENT.FIRE, new List<ELEMENT>{ ELEMENT.ICE, ELEMENT.STONE } },
             { ELEMENT.ICE, new List<ELEMENT>{ ELEMENT.FIRE } },
-            { ELEMENT.WOOD, new List<ELEMENT>{ ELEMENT.FIRE, ELEMENT.WIND } },
-            { ELEMENT.STONE, new List<ELEMENT>{ ELEMENT.ICE, ELEMENT.WOOD } },
+            { ELEMENT.LEAF, new List<ELEMENT>{ ELEMENT.FIRE, ELEMENT.WIND } },
+            { ELEMENT.STONE, new List<ELEMENT>{ ELEMENT.ICE, ELEMENT.LEAF } },
             { ELEMENT.WIND, new List<ELEMENT>{ ELEMENT.STONE } }
         };
 
         public static Dictionary<ELEMENT, Color> ELEMENT_COLORS = new Dictionary<ELEMENT, Color>
         {
             { ELEMENT.FIRE, Color.Red },
-            { ELEMENT.ICE, Color.LightBlue },
-            { ELEMENT.WOOD, Color.Brown },
+            { ELEMENT.ICE, Color.Blue },
+            { ELEMENT.LEAF, Color.Green},
             { ELEMENT.STONE, Color.Gray },
             { ELEMENT.WIND, Color.Turquoise }
         };
