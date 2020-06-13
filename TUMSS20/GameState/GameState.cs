@@ -70,7 +70,7 @@ namespace TUMSS20.GameState
             qte = null;
 
             var rnd = new Random();
-            nextQTESecondsDelay = rnd.Next(3, 5);
+            nextQTESecondsDelay = rnd.Next(5, 7);
         }
 
         private void CheckQTE()

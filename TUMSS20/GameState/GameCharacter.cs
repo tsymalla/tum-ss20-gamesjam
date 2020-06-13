@@ -13,7 +13,7 @@ namespace TUMSS20.GameState
         private float velocity;
         private Texture2D texture;
         private Texture2D particleTexture;
-        private const float gravity = 2.0f;
+        private float gravity = 2.0f;
         private ParticleEmitter particleEmitter;
 
         public Vector2 Position
@@ -49,8 +49,10 @@ namespace TUMSS20.GameState
             particleEmitter = new ParticleEmitter(particleTexture, position);
         }
 
-        public void Update(GameTime gameTime, int points)
+        public void Update(GameTime gameTime, int score)
         {
+            // for each 10 points, add a little velocity.
+            velocity = 1.0f + ((float)score / 10.0f);
             position.X += velocity;
 
             // make the character go down automatically

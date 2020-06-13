@@ -42,7 +42,7 @@ namespace TUMSS20.GameState
 
             for (int index = 0; index < count; index++)
             {
-                heights.Add(rnd.Next(1, 4));
+                heights.Add(rnd.Next(1, maxHeight));
             }
         }
 
@@ -55,7 +55,7 @@ namespace TUMSS20.GameState
                 int newCount = halfScreenWidth / wall.Width;
 
                 // TODO use score to create larger walls
-                int newMaxHeight = Math.Max(Math.Max(1, currentScore / 4), 6);
+                int newMaxHeight = new Random().Next(1, 5);// Math.Max(Math.Max(1, currentScore / 4), 3);
                 GenerateTiles(false, newCount, newMaxHeight);
 
                 nextRefreshPointX += halfScreenWidth;
@@ -77,7 +77,7 @@ namespace TUMSS20.GameState
                 int endY = inverted ? startY + tileCountY : tileCountY;
                 for (int y = startY; y < endY; y++)
                 {
-                    spriteBatch.Draw(wall, new Vector2(x * wallWidth, y * wall.Height), color);
+                    spriteBatch.Draw(wall, new Vector2(x * wallWidth, y * wall.Height), Color.White);
                 }
             }
         }

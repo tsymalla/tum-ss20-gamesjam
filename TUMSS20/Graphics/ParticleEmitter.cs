@@ -28,10 +28,10 @@ namespace TUMSS20.Graphics
         {
             Vector2 position = EmitterLocation;
             Vector2 velocity = new Vector2(
-                    3f * (float)(random.NextDouble() * 2 - 1),
-                    3f * (float)(random.NextDouble() * 2 - 1));
+                    1f * (float)(random.NextDouble() * 2 - 1),
+                    1f * (float)(random.NextDouble() * 2 - 1));
             float angle = 0;
-            float angularVelocity = 15.5f * (float)(random.NextDouble() * 2 - 1);
+            float angularVelocity = 2.5f * (float)(random.NextDouble() * 2 - 1);
             float size = (float)random.NextDouble();
             int ttl = 10 + random.Next(45);
 

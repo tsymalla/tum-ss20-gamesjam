@@ -80,9 +80,13 @@ namespace TUMSS20.GameState
             {
                 TimeoutSeconds = 3;
             }
-            else
+            else if (currentScore >= 30 && currentScore < 45)
             {
                 TimeoutSeconds = 2;
+            }
+            else
+            {
+                TimeoutSeconds = 1;
             }
 
             timeLeftSeconds = TimeoutSeconds;
@@ -90,7 +94,7 @@ namespace TUMSS20.GameState
 
         public void HandleInput(GameTime time)
         {
-            if (elapsedMs < 100)
+            if (elapsedMs < 100 || Passed)
             {
                 return;
             }
