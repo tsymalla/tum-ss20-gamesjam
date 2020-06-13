@@ -143,7 +143,7 @@ namespace TUMSS20.GameState
             int elementScale = Constants.ELEMENT_IMAGE_SCALE;
             var relevantElements = Constants.ELEMENT_MAPPING[ChosenElement];
             int totalWidth = relevantElements.Count * Constants.ELEMENT_IMAGE_SIZE * elementScale;
-            int center = (graphics.PreferredBackBufferWidth / 2) - totalWidth;
+            int center = (graphics.PreferredBackBufferWidth / 2) - (totalWidth / 2);
             
             foreach (var applicableElement in relevantElements)
             {
