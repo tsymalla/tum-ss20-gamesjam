@@ -78,6 +78,7 @@ namespace TUMSS20.GameState
         public override void SetActive()
         {
             AudioCache.Instance.StopSongs();
+            AudioCache.Instance.PlaySoundEffect("fail");
         }
     }
 }

@@ -25,6 +25,12 @@
 /processorParam:Quality=Best
 /build:audio/cave-theme.mp3
 
+#begin audio/fail.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/fail.wav
+
 #begin audio/pick.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

@@ -55,17 +55,7 @@ namespace TUMSS20.GameState
         public override void Draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime time)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(titleScreen, new Vector2(0, 0), Color.Red);
-
-            int elementScale = Constants.ELEMENT_IMAGE_SCALE;
-            int totalWidth = Constants.ELEMENT_COUNT * Constants.ELEMENT_IMAGE_SIZE * elementScale;
-            int center = (graphics.PreferredBackBufferWidth / 2) - (totalWidth / 2);
-
-            for (int i = 0; i < Constants.ELEMENT_COUNT; i++)
-            {
-                elementSpriteSheet.Draw(i, new Vector2(center + (i * Constants.ELEMENT_IMAGE_SIZE * elementScale), 10), elementScale, spriteBatch);
-            }
-
+            spriteBatch.Draw(titleScreen, new Vector2(0, 0), Color.White);
             spriteBatch.End();
         }
 
