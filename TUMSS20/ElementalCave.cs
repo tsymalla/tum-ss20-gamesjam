@@ -11,14 +11,14 @@ namespace TUMSS20
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class ColorCave : Game
+    public class ElementalCave : Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
         private GameStateManager gameStateManager;
 
-        public ColorCave()
+        public ElementalCave()
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.IsFullScreen = false;
@@ -36,7 +36,7 @@ namespace TUMSS20
         /// </summary>
         protected override void Initialize()
         {
-            Window.Title = "ColorCave - TUM SemesterGameJamSS20";
+            Window.Title = "ElementalCave - TUM SemesterGameJamSS20";
             base.Initialize();
         }
 

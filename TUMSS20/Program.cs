@@ -13,7 +13,7 @@ namespace TUMSS20
         [STAThread]
         static void Main()
         {
-            using (var game = new ColorCave())
+            using (var game = new ElementalCave())
             {
                 game.Run();
             }
