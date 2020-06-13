@@ -10,6 +10,7 @@ namespace TUMSS20.GameState
     public class GameCharacter
     {
         private Vector2 position;
+        private float initialVelocity;
         private float velocity;
         private Texture2D texture;
         private Texture2D particleTexture;
@@ -42,7 +43,9 @@ namespace TUMSS20.GameState
 
         public GameCharacter(int screenHeight, ContentManager contentManager)
         {
-            velocity = 1.0f;
+            initialVelocity = (float)Constants.CurrentLevel * 3.0f;
+            velocity = initialVelocity;
+
             position = new Vector2(0, screenHeight / 2);
             texture = contentManager.Load<Texture2D>("character");
             particleTexture = contentManager.Load<Texture2D>("pointlight");
@@ -52,7 +55,7 @@ namespace TUMSS20.GameState
         public void Update(GameTime gameTime, int score)
         {
             // for each 10 points, add a little velocity.
-            velocity = 1.0f + ((float)score / 10.0f);
+            velocity = initialVelocity + ((float)score / 10.0f);
             position.X += velocity;
 
             // make the character go down automatically

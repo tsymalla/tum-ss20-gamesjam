@@ -12,9 +12,10 @@ using TUMSS20.Graphics;
 
 namespace TUMSS20.GameState
 {
-    public class GameOverState : BaseGameState
+    public class FinishLevelState : BaseGameState
     {
         private SpriteFont defaultFont;
+        private int totalScore = 0;
         const int TIME_DELAY_SECONDS = 1;
         private int totalMsSpent = 0;
         private float scoreLabelY;
@@ -34,6 +35,11 @@ namespace TUMSS20.GameState
             scoreLabelY = 80;
         }
 
+        public void SetTotalScore(int points)
+        {
+            totalScore = points;
+        }
+
         public void SetColor(Color color)
         {
             this.color = color;
@@ -43,9 +49,8 @@ namespace TUMSS20.GameState
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && IsDelayPassed)
             {
-                Constants.TotalScore = 0;
-                Constants.CurrentLevel = 1;
-
+                Constants.CurrentLevel++;
+                Constants.TotalScore += totalScore;
                 gameStateManager.Restart();
             }
         }
@@ -61,9 +66,9 @@ namespace TUMSS20.GameState
             graphics.GraphicsDevice.Clear(color);
 
             spriteBatch.Begin();
-            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, 0, "GAME OVER!", Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, scoreLabelY, string.Format("You scored {0} points!", Constants.TotalScore), Color.White);
-            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, 100, "Press Space to replay.", Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, 0, string.Format("Finished Level {0}!", Constants.CurrentLevel), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, scoreLabelY, string.Format("You scored {0} points!", totalScore), Color.White);
+            Text.DrawCenteredString(graphics, spriteBatch, defaultFont, 100, "Press Space to continue.", Color.White);
             spriteBatch.End();
         }
     }

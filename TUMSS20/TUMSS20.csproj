@@ -45,6 +45,7 @@
     <Compile Include="ColorCave.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="GameState\GameCharacter.cs" />
+    <Compile Include="GameState\FinishLevelState.cs" />
     <Compile Include="GameState\GameOverState.cs" />
     <Compile Include="GameState\GameState.cs" />
     <Compile Include="GameState\QTE.cs" />

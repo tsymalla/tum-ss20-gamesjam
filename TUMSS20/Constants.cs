@@ -10,6 +10,9 @@ namespace TUMSS20
 {
     public class Constants
     {
+        public static int CurrentLevel = 1;
+        public static int TotalScore = 0;
+
         public static Color ColorFromHex(string hex)
         {
             var drawColor = System.Drawing.ColorTranslator.FromHtml(hex);

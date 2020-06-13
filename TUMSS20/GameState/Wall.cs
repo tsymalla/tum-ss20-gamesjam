@@ -16,54 +16,34 @@ namespace TUMSS20.GameState
         private int screenHeight;
         private Texture2D wall;
         private List<int> heights;
-        private int nextRefreshPointX;
+        private int totalScreens;
 
-        public Wall(ContentManager contentManager, int screenWidth, int screenHeight, bool inverted)
+        public Wall(ContentManager contentManager, int screenWidth, int screenHeight, bool inverted, int totalScreens)
         {
             this.inverted = inverted;
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
-            nextRefreshPointX = screenWidth / 2;
+            this.totalScreens = totalScreens;
 
             wall = contentManager.Load<Texture2D>("wall");
 
-            GenerateTiles(true, screenWidth / wall.Width, 4);
+            GenerateTiles();
         }
 
-        private void GenerateTiles(bool refresh, int count, int maxHeight)
+        private void GenerateTiles()
         {
             // generate amount of heights
             Random rnd = new Random();
 
-            if (refresh)
+            int tilesXPerScreen = screenWidth / wall.Width;
+            int maxCount = tilesXPerScreen * totalScreens;
+            heights = new List<int>(maxCount);
+        
+            for (int index = 0; index < maxCount; index++)
             {
-                heights = new List<int>(count);
-            }
-
-            for (int index = 0; index < count; index++)
-            {
+                int maxHeight = rnd.Next(2, 5);
                 heights.Add(rnd.Next(1, maxHeight));
             }
-        }
-
-        public void Update(Vector2 playerPosition, int playerWidth, GameTime time, int currentScore)
-        {
-            // only regenerate the walls if there are too little of them.
-            if (playerPosition.X >= nextRefreshPointX)
-            {
-                int halfScreenWidth = screenWidth / 2;
-                int newCount = halfScreenWidth / wall.Width;
-
-                // TODO use score to create larger walls
-                int newMaxHeight = new Random().Next(1, 5);// Math.Max(Math.Max(1, currentScore / 4), 3);
-                GenerateTiles(false, newCount, newMaxHeight);
-
-                nextRefreshPointX += halfScreenWidth;
-            }
-
-            // TODO
-            // remove all non-visible elements to prevent leaking memory
-            //heights.RemoveRange(0, (int)playerPosition.X / 2 / wall.Width);
         }
 
         public void Draw(SpriteBatch spriteBatch, Color color)
@@ -84,6 +64,11 @@ namespace TUMSS20.GameState
 
         public bool HasCollided(Vector2 position, int collidableHeight)
         {
+            if (HasFinishedLevel(position))
+            {
+                return false;
+            }
+
             int tileIndex = (int)position.X / wall.Width;
             int height = heights[tileIndex] * wall.Height;
 
@@ -94,6 +79,17 @@ namespace TUMSS20.GameState
             }
 
             return true;
+        }
+
+        public bool HasFinishedLevel(Vector2 position)
+        {
+            int tileIndex = (int)position.X / wall.Width;
+            if (tileIndex >= heights.Count)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

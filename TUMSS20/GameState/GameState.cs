@@ -52,8 +52,9 @@ namespace TUMSS20.GameState
 
             pointLightManager = new PointLightManager(contentManager);
 
-            topWall = new Wall(contentManager, screenWidth, screenHeight, false);
-            bottomWall = new Wall(contentManager, screenWidth, screenHeight, true);
+            int levelSize = Constants.CurrentLevel * 5;
+            topWall = new Wall(contentManager, screenWidth, screenHeight, false, levelSize);
+            bottomWall = new Wall(contentManager, screenWidth, screenHeight, true, levelSize);
 
             camera = new Camera(graphics.GraphicsDevice);
 
@@ -88,14 +89,17 @@ namespace TUMSS20.GameState
             qte = new QTE(currentElement, score, elementSheet);
         }
 
-        private void DrawScore(SpriteBatch spriteBatch)
+        private void DrawHUD(SpriteBatch spriteBatch)
         {
-            string scoreString = string.Format("Score: {0}", score);
-            spriteBatch.DrawString(defaultFont, scoreString, new Vector2(35, (Constants.ELEMENT_IMAGE_SIZE * Constants.ELEMENT_IMAGE_SCALE) + 35), Color.White);
-        }
+            string levelString = string.Format("Level: {0}", Constants.CurrentLevel);
+            spriteBatch.DrawString(defaultFont, levelString, new Vector2(35, (Constants.ELEMENT_IMAGE_SIZE * Constants.ELEMENT_IMAGE_SCALE) + 35), Color.White);
 
-        private void DrawElement(SpriteBatch spriteBatch)
-        {
+            string scoreString = string.Format("Score: {0}", score);
+            spriteBatch.DrawString(defaultFont, scoreString, new Vector2(35, (Constants.ELEMENT_IMAGE_SIZE * Constants.ELEMENT_IMAGE_SCALE) + 55), Color.White);
+
+            string totalScoreString = string.Format("Total Score: {0}", Constants.TotalScore);
+            spriteBatch.DrawString(defaultFont, totalScoreString, new Vector2(35, (Constants.ELEMENT_IMAGE_SIZE * Constants.ELEMENT_IMAGE_SCALE) + 75), Color.White);
+
             elementSheet.Draw((int)currentElement, new Vector2(20, 30), Constants.ELEMENT_IMAGE_SCALE, spriteBatch);
         }
 
@@ -135,8 +139,7 @@ namespace TUMSS20.GameState
             spriteBatch.End();
 
             spriteBatch.Begin();
-            DrawScore(spriteBatch);
-            DrawElement(spriteBatch);
+            DrawHUD(spriteBatch);
             spriteBatch.End();
         }
 
@@ -166,7 +169,7 @@ namespace TUMSS20.GameState
                 }
                 else if (qte.Passed)
                 {
-                    currentElement = qte.ChosenElement;
+                    currentElement = qte.SelectedElement;
                     currentColor = Constants.ELEMENT_COLORS[currentElement];
                     RestartQTE();
                 }
@@ -177,9 +180,6 @@ namespace TUMSS20.GameState
 
                 return;
             }
-
-            topWall.Update(character.Position, character.Width, time, score);
-            bottomWall.Update(character.Position, character.Width, time, score);
 
             camera.Update(time);
             camera.Position = character.Position;
@@ -195,14 +195,19 @@ namespace TUMSS20.GameState
             }
 
             character.Update(time, score);
-            CheckGameLost();
+            CheckGameState();
         }
 
-        private void CheckGameLost()
+        private void CheckGameState()
         {
             // check boundaries
             if (!topWall.HasCollided(character.Position, character.Height) && !bottomWall.HasCollided(character.Position, character.Height))
             {
+                if (topWall.HasFinishedLevel(character.Position))
+                {
+                    FinishLevel();
+                }
+
                 return;
             }
 
@@ -212,9 +217,16 @@ namespace TUMSS20.GameState
         private void GameOver()
         {
             var gameOver = new GameOverState();
-            gameOver.SetTotalScore(score);
             gameOver.SetColor(currentColor);
             gameStateManager.PushState(gameOver);
+        }
+
+        private void FinishLevel()
+        {
+            var finishLevel = new FinishLevelState();
+            finishLevel.SetTotalScore(score);
+            finishLevel.SetColor(currentColor);
+            gameStateManager.PushState(finishLevel);
         }
     }
 }

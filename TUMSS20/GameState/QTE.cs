@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -44,6 +45,13 @@ namespace TUMSS20.GameState
             get;
             set;
         }
+        public Constants.ELEMENT SelectedElement
+        {
+            get
+            {
+                return selectedElement;
+            }
+        }
 
         public QTE(Constants.ELEMENT selectedElement, int currentScore, SpriteSheet elementSheet)
         {
@@ -68,19 +76,25 @@ namespace TUMSS20.GameState
 
         private void ChoseTimeout(int currentScore)
         {
-            if (currentScore < 10)
+            int relevantScore = currentScore;
+            if (Constants.CurrentLevel > 1)
+            {
+                relevantScore += Constants.CurrentLevel * 5;
+            }
+
+            if (relevantScore < 20)
             {
                 TimeoutSeconds = 5;
             }
-            else if (currentScore >= 10 && currentScore < 20)
+            else if (relevantScore >= 20 && relevantScore < 35)
             {
                 TimeoutSeconds = 4;
             }
-            else if (currentScore >= 20 && currentScore < 30)
+            else if (relevantScore >= 35 && relevantScore < 50)
             {
                 TimeoutSeconds = 3;
             }
-            else if (currentScore >= 30 && currentScore < 45)
+            else if (relevantScore >= 50 && relevantScore < 65)
             {
                 TimeoutSeconds = 2;
             }
